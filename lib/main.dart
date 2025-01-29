@@ -4,7 +4,7 @@ import 'package:newscloud/provider/mood_provider.dart';
 import 'package:newscloud/screens/Proflie.dart';
 import 'package:newscloud/screens/Setting.dart';
 import 'package:newscloud/screens/currency.dart';
-
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import '../category/CategoryList.dart';
@@ -38,11 +38,19 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class Homepage extends StatelessWidget {
+class Homepage extends StatefulWidget {
   static const String pageRoute = 'homeScreen';
   bool isLight;
 
   Homepage(this.isLight, {super.key});
+
+  @override
+  State<Homepage> createState() => _HomepageState();
+}
+Future<void> onRefresh()async{
+return await Future.delayed(const Duration(seconds: 2));
+}
+class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -80,7 +88,6 @@ class GNavExample extends StatefulWidget {
   @override
   _GNavExampleState createState() => _GNavExampleState();
 }
-
 class _GNavExampleState extends State<GNavExample> {
   int _selectedIndex = 0;
 
@@ -139,12 +146,33 @@ class _GNavExampleState extends State<GNavExample> {
   }
 }
 
+
+
+
+  @override
+  Widget build(Object context) {
+
+    throw UnimplementedError();
+  }
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return
+LiquidPullToRefresh(
+  onRefresh: onRefresh,
+  height: 200,
+  animSpeedFactor: 2,
+  backgroundColor: Colors.black,
+  color: Colors.grey,
+  borderWidth: 5,
+  showChildOpacityTransition: false,
+  springAnimationDurationInMilliseconds: 2500,
+
+  child:
+      ListView(
       children: const [
         Categorylist(),
         SizedBox(
@@ -154,6 +182,8 @@ class HomePage extends StatelessWidget {
           category: 'general',
         ),
       ],
-    );
+    ));
   }
 }
+
+
